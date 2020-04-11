@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "node -r dotenv/config app.js dotenv_config_path=production.env",
+    "dev": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,7 @@
     "uuid": "^7.0.2"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "nodemon": "^2.0.2"
   }
 }

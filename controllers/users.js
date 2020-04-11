@@ -5,8 +5,6 @@ const { validationResult } = require('express-validator')
 const HttpError = require('../models/http-error')
 const User = require('../models/user')
 
-const salt = 'incredibly_secret_string'
-
 const expireTimeout = 1 * 60 * 60
 
 const getUsers = async (req, res, next) => {
@@ -39,8 +37,7 @@ const login = async (req, res, next) => {
     let token
     const expireDateInSec = Math.floor(Date.now() / 1000) + expireTimeout
     try {
-      // token = await jwt.sign({ userId: identifiedUser.id, email: identifiedUser.email }, salt, {expiresIn: '1h'})
-      token = await jwt.sign({ userId: identifiedUser.id, email: identifiedUser.email, iat: expireDateInSec  }, salt)
+      token = jwt.sign({ userId: identifiedUser.id, email: identifiedUser.email, iat: expireDateInSec  }, process.env.JWT_KEY)
     } catch(error) {
       return next(error)
     }
@@ -91,8 +88,7 @@ const signup = async (req, res, next) => {
   let token
   const expireDateInSec = Math.floor(Date.now() / 1000) + expireTimeout
   try {
-    // token = jwt.sign({ userId: user.id, email: user.email }, salt, {expiresIn: '1h'})
-    token = jwt.sign({ userId: user.id, email: user.email, iat: expireDateInSec }, salt)
+    token = jwt.sign({ userId: user.id, email: user.email, iat: expireDateInSec }, process.env.JWT_KEY)
   } catch(error) {
     return next(error)
   }

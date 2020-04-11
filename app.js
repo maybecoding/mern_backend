@@ -7,6 +7,8 @@ const routesUsers = require('./routes/users')
 const HttpError = require('./models/http-error')
 const mongoose = require('mongoose')
 
+
+
 const fs = require('fs')
 const path = require('path')
 
@@ -43,10 +45,13 @@ app.use((error, req, res, next) => {
   res.status(error.code || 500).json( { message: error.message || 'An unknown error ocured!' } )
 })
 
+const credentials = !!(process.env.DB_USER && process.env.DB_PASSWORD) ? `${process.env.DB_USER}:${process.env.DB_PASSWORD}@` : ''
+const port = !!process.env.DB_PORT ? ':' + process.env.DB_PORT : ''
+mongoose.connect(`mongodb+srv://${credentials}${process.env.DB_HOST}${port}/${process.env.DB_NAME}?retryWrites=true&w=majority`, {useNewUrlParser: true, useUnifiedTopology: true})
 //mongoose.connect('mongodb://localhost:27017/places?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true})
-mongoose.connect('mongodb+srv://dev:Intesa123456@cluster0-3tnlk.mongodb.net/places?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true})
+//mongoose.connect('mongodb+srv://dev:Intesa123456@cluster0-3tnlk.mongodb.net/places?retryWrites=true&w=majority', {useNewUrlParser: true, useUnifiedTopology: true})
   .then(() => {
-    app.listen(5000)
+    app.listen(process.env.port || 5000)
   })
   .catch(error => {
     console.log(error)
